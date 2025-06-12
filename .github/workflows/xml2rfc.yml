@@ -6,6 +6,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - uses: actions/checkout@v4
@@ -21,10 +23,12 @@ jobs:
         pip install xml2rfc
         xml2rfc draft-dns-zone-digest.xml && cat draft-dns-zone-digest.txt
     - name: Commit updated file
-      run: |
-        git config --local user.name "GitHub Action"
-        git config --local user.email "action@github.com"
-        git add draft-dns-zone-digest.txt && git commit -m "Regenerate .txt"
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: GitHub Action
+          author_email: action@github.com
+          message: "Regenerate .txt"
+          add: draft-dns-zone-digest.txt
     - name: Push I-D file
       uses: ad-m/github-push-action@master
       with:
